@@ -1,6 +1,7 @@
 import React from "react";
 import TodoList from "./TodoList";
 import "./App.css";
+import { createStore } from "redux";
 
 const listTodoItems = [
   { name: "task1", isCompleted: false },
@@ -8,47 +9,78 @@ const listTodoItems = [
   { name: "task3", isCompleted: false }
 ];
 
-const reducer = (state, action) => {
+const reducer = (
+  state = {
+    name: "Our TODOLIST App",
+    joke: "Why did the cat cross the road?",
+    jokeAnswer: "Because it saw something exciting on the other side."
+  },
+  action
+) => {
   switch (action.type) {
     default:
-      return "hello there!";
+      return state;
   }
 };
+
+const store = createStore(reducer);
 
 export default function App() {
   return (
     <div className="App">
+      <p>{store.getState().name}</p>
       <TodoList todos={listTodoItems} />
-      {/* the paragraph below is added just for testing - you can ignore it */}
-      <p>{reducer("initial state", { type: "an action type" })}</p>
+      <p>Here's our joke of the day:</p>
+      {/* modify the 2 paragraphs below to add the joke and jokeAnswer from state */}
+      <p>Edits</p>
+      <p>Edits</p>
     </div>
   );
 }
 
 /* 
-Your task is to get the reducer to return the previous state.
-View demo at https://codesandbox.io/s/github/Ourstress/temp-test/tree/reduxLesson1/react
+Your task is to replace the paragraph elements marked "Edits" with the joke of the day and answer to the joke.
+View demo at https://codesandbox.io/s/github/Ourstress/temp-test/tree/reduxLesson2/react
 
 --Walkthrough--
 
-The first thing we will cover about Redux is about reducers.
-If you know how reducers work, you are very close to understanding Redux!
+What is Redux store?
 
-Now, the job of a reducer is to handle changes in application state in response to actions.
-Something like when you add a todo ("action") to your todolist, you want your app to save it in its state.
+Contains the state of our application. 
+eg. all the todos in our todolist app
+The only way to change the state is to dispatch an action.
+eg. store.dispatch({type: "addTodo"})
+Basically, state + action = new state.
 
-Therefore, to do its job, the reducer is a function that takes 2 parameters.
+
+How to setup the Redux store?
+
+Use Redux's createStore(reducer) function.
+
+
+What is store.getState()?
+
+Allows access to state.
+It is equal to the last value returned by the store's reducer.
+Therefore, it is important for reducer to return state by default!
+
+
+Recap of reducer
+
+Reducer is a function that takes 2 parameters.
 These 2 parameters are  1) previous state & 2) action
+The reducer returns the new state or next state
 
-Based on the previous state (eg. you got 3 todos in your app's state already) and action (add a new todo),
-the reducer returns the new state or next state (ie. 4 todos now) 
 
-In Redux, actions come in different flavours or types. 
-Actions are just javascript objects that have properties known as type
-For example, an action can be as simple as this --> { type: "an action type" }
+Recap of action 
+
+Actions are just javascript objects
+As simple as this --> { type: "an action type" }
 The property type is used to tell the reducer how it should proceed.
 
+
 How does the reducer know what to do when it receives an action?
+
 A reducer decides what to do based on a switch.
 It checks what the action type is, and then handles it accordingly.
   switch (action.type) {
@@ -56,7 +88,5 @@ It checks what the action type is, and then handles it accordingly.
       return "hello there!";
   }
 
-In the switch above, whatever the action type is, the reducer also returns "hello there"
-Your task is to get the reducer to return the previous state.
 View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson1
 */
