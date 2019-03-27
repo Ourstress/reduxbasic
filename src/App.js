@@ -4,17 +4,15 @@ import { createStore } from "redux";
 
 const reducer = (
   state = {
-    name: "Our TODOLIST App",
-    joke: "Why did the cat cross the road?",
-    jokeAnswer: "Press the button below if you thought of the answer :P"
+    todos: [
+      { name: "task1", isCompleted: false },
+      { name: "task2", isCompleted: true },
+      { name: "task3", isCompleted: false }
+    ]
   },
   action
 ) => {
   switch (action.type) {
-    case "revealAnswer":
-      return Object.assign({}, state, {
-        jokeAnswer: "Because it saw something exciting on the other side."
-      });
     default:
       return state;
   }
@@ -24,31 +22,27 @@ const store = createStore(reducer);
 
 export default function App() {
   const [state, setState] = useState(store.getState());
+  const [todoValue, setTodoValue] = useState("");
   return (
     <div className="App">
-      <p>{state.name}</p>
-      <p>Here's our joke of the day:</p>
-      <p>{state.joke}</p>
-      <p>{state.jokeAnswer}</p>
-      <button
-        onClick={e => {
-          store.dispatch({ type: "revealAnswer" });
-          setState(store.getState());
+      <h2>Our Todolist App</h2>
+      {state.todos.map(function(todo) {
+        return (
+          <p key={todo.name}>
+            {todo.name}
+            <input type="checkbox" />
+          </p>
+        );
+      })}
+      <form
+        onSubmit={e => {
+          // props.addTodo(todoValue);
+          e.preventDefault();
         }}
       >
-        Click to reveal joke answer
-      </button>
-      <br />
-      <br />
-      <button
-        onClick={e => {
-          // Add a new type to the reducer switch above and modify / uncomment the next line:
-          // store.dispatch({ type: "revealAnswer" });
-          setState(store.getState());
-        }}
-      >
-        Click to hide joke answer
-      </button>
+        <input value={todoValue} onChange={e => setTodoValue(e.target.value)} />
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 }
