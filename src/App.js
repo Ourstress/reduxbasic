@@ -1,23 +1,20 @@
-import React from "react";
-import TodoList from "./TodoList";
+import React, { useState } from "react";
 import "./App.css";
 import { createStore } from "redux";
-
-const listTodoItems = [
-  { name: "task1", isCompleted: false },
-  { name: "task2", isCompleted: true },
-  { name: "task3", isCompleted: false }
-];
 
 const reducer = (
   state = {
     name: "Our TODOLIST App",
     joke: "Why did the cat cross the road?",
-    jokeAnswer: "Because it saw something exciting on the other side."
+    jokeAnswer: "Press the button below if you thought of the answer :P"
   },
   action
 ) => {
   switch (action.type) {
+    case "revealAnswer":
+      return Object.assign({}, state, {
+        jokeAnswer: "Because it saw something exciting on the other side."
+      });
     default:
       return state;
   }
@@ -26,23 +23,74 @@ const reducer = (
 const store = createStore(reducer);
 
 export default function App() {
+  const [state, setState] = useState(store.getState());
   return (
     <div className="App">
-      <p>{store.getState().name}</p>
-      <TodoList todos={listTodoItems} />
+      <p>{state.name}</p>
       <p>Here's our joke of the day:</p>
-      {/* modify the 2 paragraphs below to add the joke and jokeAnswer from state */}
-      <p>Edits</p>
-      <p>Edits</p>
+      <p>{state.joke}</p>
+      <p>{state.jokeAnswer}</p>
+      <button
+        onClick={e => {
+          store.dispatch({ type: "revealAnswer" });
+          setState(store.getState());
+        }}
+      >
+        Click to reveal joke answer
+      </button>
+      <br />
+      <br />
+      <button
+        onClick={e => {
+          // Add a new type to the reducer switch above and modify / uncomment the next line:
+          // store.dispatch({ type: "revealAnswer" });
+          setState(store.getState());
+        }}
+      >
+        Click to hide joke answer
+      </button>
     </div>
   );
 }
 
 /* 
-Your task is to replace the paragraph elements marked "Edits" with the joke of the day and answer to the joke.
-View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson2
+Your task is to add a new action to hide the jokeAnswer
+View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson3
 
 --Walkthrough--
+
+What are actions?
+
+Actions are just javascript objects
+As simple as this --> { type: "an action type" }
+The property type is used to tell the reducer how it should proceed.
+
+
+What is dispatch?
+
+Basically, it triggers state change.
+Calls store's reducer with previous state and action.
+
+
+Why use object.assign?
+
+Because we don't mutate the state.
+Instead, we create a copy using Object.assign().
+Since the first argument will be mutated,
+we must supply an empty object as the first parameter.
+
+
+What does the syntax using object.assign mean?
+
+Object.assign({}, state, {
+        jokeAnswer: "Because it saw something exciting on the other side."
+      })
+First parameter is the empty object to be mutated
+Second parameter onwards are called sources
+Properties in the target object will be overwritten by properties in the sources 
+if they have the same key. 
+Later sources' properties will similarly overwrite earlier ones.
+
 
 What is Redux store?
 
@@ -70,13 +118,6 @@ Recap of reducer
 Reducer is a function that takes 2 parameters.
 These 2 parameters are  1) previous state & 2) action
 The reducer returns the new state or next state
-
-
-Recap of action 
-
-Actions are just javascript objects
-As simple as this --> { type: "an action type" }
-The property type is used to tell the reducer how it should proceed.
 
 
 How does the reducer know what to do when it receives an action?
