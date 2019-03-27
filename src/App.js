@@ -40,7 +40,7 @@ export default function App() {
 
 /* 
 Your task is to replace the paragraph elements marked "Edits" with the joke of the day and answer to the joke.
-View demo at https://codesandbox.io/s/github/Ourstress/temp-test/tree/reduxLesson2/react
+View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson2
 
 --Walkthrough--
 
