@@ -46,23 +46,49 @@ View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLess
 
 What is Redux store?
 
-Contains the state of our application. 
-eg. all the todos in our todolist app
-The only way to change the state is to dispatch an action.
-eg. store.dispatch({type: "addTodo"})
-Basically, state + action = new state.
+The store contains the application state. 
+Think of the store as the memory of your app.
+Example of todolist app state managed by the store 
+- all the todos in our todolist app
+- keeping track of changes 
+- user details
+A single store is recommended for applications.
 
+
+How to interact with the Redux Store?
+The only way to change the state 
+is to dispatch an action.
+eg. store.dispatch({type: "addTodo", text:"task4"})
+Basically, state + action = new state.
 
 How to setup the Redux store?
 
 Use Redux's createStore(reducer) function.
-
+We need to supply a reducer,
+as the reducer manages the store's state.
 
 What is store.getState()?
 
 Allows access to state.
 It is equal to the last value returned by the store's reducer.
+eg. 
+1) we added a todo - point 1
+2) updated another todo - point 2
+3) call store.getState() - returns the application state at point 2
 Therefore, it is important for reducer to return state by default!
+
+
+Providing the store with an initial state
+
+For the example above, 
+the initial state is provided by reducer.
+But we can createStore(reducer)
+with an initial state as well. 
+const store = createStore(reducer, [{
+  name: "Our TODOLIST App",
+  joke: "Why did the cat cross the road?",
+  jokeAnswer: "Because it saw something exciting on the other side."
+}]);
 
 
 Recap of reducer
@@ -88,5 +114,5 @@ It checks what the action type is, and then handles it accordingly.
       return "hello there!";
   }
 
-View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson1
+View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson2
 */
