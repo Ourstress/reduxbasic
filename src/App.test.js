@@ -1,21 +1,16 @@
 import React from "react";
-import { render, cleanup, fireEvent } from "react-testing-library";
+import { render, cleanup } from "react-testing-library";
 import "jest-dom/extend-expect";
 import App from "./App";
 
 afterEach(cleanup);
 
-describe("The App component", () => {
-  it("App component should hide jokeAnswer when hide joke answer button clicked", () => {
-    const { getByText, getByPlaceholderText, debug } = render(<App />);
-    fireEvent.change(getByPlaceholderText(/Add todo/i), {
-      target: { value: "Pineapples for sale" }
-    });
-    fireEvent.click(getByText(/Submit/i));
-    debug();
-    const pineapplesTodo = getByText(/Pineapples for sale/i);
-    const task3Todo = getByText(/task3/i);
-    expect(pineapplesTodo).toBeInTheDocument();
-    expect(task3Todo).toBeInTheDocument();
+describe("The UserProfile component rendered by App", () => {
+  it("should render user profile info from the Redux store", () => {
+    const { getByText } = render(<App />);
+    const country = getByText("UK");
+    const name = getByText(/Jane Doe/i);
+    expect(country).toBeInTheDocument();
+    expect(name).toBeInTheDocument();
   });
 });

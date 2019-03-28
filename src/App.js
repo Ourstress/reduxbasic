@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
 import { createStore } from "redux";
+import { Provider } from "react-redux";
+import TodoList from "./TodoList";
+import UserProfile from "./UserProfile";
 
 const reducer = (state, action) => {
   switch (action.type) {
-    // Do uncomment the 2 statements below and implement addTodo
-    // case "addTodo":
-    // return Object.assign(...);
+    case "addTodo":
+      return {
+        todos: [...state.todos, { name: action.name, isCompleted: false }]
+      };
     case "updateTodo":
       return {
         ...state,
@@ -27,54 +31,27 @@ const store = createStore(reducer, {
     { name: "task1", isCompleted: false },
     { name: "task2", isCompleted: true },
     { name: "task3", isCompleted: false }
-  ]
+  ],
+  userProfile: {
+    name: "Jane Doe",
+    country: "UK"
+  }
 });
 
 export default function App() {
-  const [state, setState] = useState(store.getState());
-  const [todoValue, setTodoValue] = useState("");
   return (
-    <div className="App">
-      <h2>Our Todolist App</h2>
-      {state.todos.map(todo => (
-        <p key={todo.name}>
-          {todo.name}
-          <input
-            type="checkbox"
-            checked={todo.isCompleted}
-            onChange={e => {
-              store.dispatch({
-                type: "updateTodo",
-                name: todo.name,
-                isCompleted: !todo.isCompleted
-              });
-              setState(store.getState());
-            }}
-          />
-        </p>
-      ))}
-      <form
-        onSubmit={e => {
-          store.dispatch({ type: "addTodo", name: todoValue });
-          setState(store.getState());
-          setTodoValue("");
-          e.preventDefault();
-        }}
-      >
-        <input
-          value={todoValue}
-          placeholder="Add todo"
-          onChange={e => setTodoValue(e.target.value)}
-        />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <TodoList />
+        <UserProfile name="Mary Goh" country="Malaysia" />
+      </div>
+    </Provider>
   );
 }
 
 /* 
 Your task is to add a new action to add new todo
-View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson4
+View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson5
 
 --Walkthrough--
 
@@ -138,13 +115,6 @@ How to setup the Redux store?
 Use Redux's createStore(reducer) function.
 
 
-What is store.getState()?
-
-Allows access to state.
-It is equal to the last value returned by the store's reducer.
-Therefore, it is important for reducer to return state by default!
-
-
 Recap of reducer
 
 Reducer is a function that takes 2 parameters.
@@ -161,5 +131,5 @@ It checks what the action type is, and then handles it accordingly.
       return "hello there!";
   }
 
-View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson4
+View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson5
 */
