@@ -7,12 +7,11 @@ afterEach(cleanup);
 
 describe("The App component", () => {
   it("App component should hide jokeAnswer when hide joke answer button clicked", () => {
-    const { getByText, getByPlaceholderText, debug } = render(<App />);
+    const { getByText, getByPlaceholderText } = render(<App />);
     fireEvent.change(getByPlaceholderText(/Add todo/i), {
       target: { value: "Pineapples for sale" }
     });
     fireEvent.click(getByText(/Submit/i));
-    debug();
     const pineapplesTodo = getByText(/Pineapples for sale/i);
     const task3Todo = getByText(/task3/i);
     expect(pineapplesTodo).toBeInTheDocument();
