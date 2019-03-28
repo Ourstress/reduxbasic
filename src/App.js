@@ -2,23 +2,33 @@ import React, { useState } from "react";
 import "./App.css";
 import { createStore } from "redux";
 
-const reducer = (
-  state = {
-    todos: [
-      { name: "task1", isCompleted: false },
-      { name: "task2", isCompleted: true },
-      { name: "task3", isCompleted: false }
-    ]
-  },
-  action
-) => {
+const reducer = (state, action) => {
   switch (action.type) {
+    // Do uncomment the 2 statements below and implement addTodo
+    // case "addTodo":
+    // return Object.assign(...);
+    case "updateTodo":
+      return {
+        ...state,
+        todos: state.todos.map(todo => {
+          if (todo.name === action.name) {
+            return { name: action.name, isCompleted: action.isCompleted };
+          }
+          return todo;
+        })
+      };
     default:
       return state;
   }
 };
 
-const store = createStore(reducer);
+const store = createStore(reducer, {
+  todos: [
+    { name: "task1", isCompleted: false },
+    { name: "task2", isCompleted: true },
+    { name: "task3", isCompleted: false }
+  ]
+});
 
 export default function App() {
   const [state, setState] = useState(store.getState());
@@ -26,21 +36,36 @@ export default function App() {
   return (
     <div className="App">
       <h2>Our Todolist App</h2>
-      {state.todos.map(function(todo) {
-        return (
-          <p key={todo.name}>
-            {todo.name}
-            <input type="checkbox" />
-          </p>
-        );
-      })}
+      {state.todos.map(todo => (
+        <p key={todo.name}>
+          {todo.name}
+          <input
+            type="checkbox"
+            checked={todo.isCompleted}
+            onChange={e => {
+              store.dispatch({
+                type: "updateTodo",
+                name: todo.name,
+                isCompleted: !todo.isCompleted
+              });
+              setState(store.getState());
+            }}
+          />
+        </p>
+      ))}
       <form
         onSubmit={e => {
-          // props.addTodo(todoValue);
+          store.dispatch({ type: "addTodo", name: todoValue });
+          setState(store.getState());
+          setTodoValue("");
           e.preventDefault();
         }}
       >
-        <input value={todoValue} onChange={e => setTodoValue(e.target.value)} />
+        <input
+          value={todoValue}
+          placeholder="Add todo"
+          onChange={e => setTodoValue(e.target.value)}
+        />
         <button type="submit">Submit</button>
       </form>
     </div>
@@ -48,10 +73,23 @@ export default function App() {
 }
 
 /* 
-Your task is to add a new action to hide the jokeAnswer
-View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson3
+Your task is to add a new action to add new todo
+View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson4
 
 --Walkthrough--
+
+state.todo returns an array
+we can use spread operator - adding the property to be updated at the end to overwrite existing one
+Object.assign and spread operator does shallow copy 
+meaning they don't copy inner items
+state:{
+  todos:{
+    INNER ITEMS
+  }
+}
+so Object.assign({},state,{todos:{name:action.name, isCompleted:action.isCompleted}}) 
+removes all the other todos
+
 
 What are actions?
 
@@ -123,5 +161,5 @@ It checks what the action type is, and then handles it accordingly.
       return "hello there!";
   }
 
-View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson1
+View demo at https://codesandbox.io/s/github/Ourstress/reduxbasic/tree/reduxLesson4
 */
